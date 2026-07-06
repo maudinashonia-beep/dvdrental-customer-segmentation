@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<h2>Customer Payment Segmentation</h2>
+
+<canvas id="myChart" width="400" height="200"></canvas>
+
+<script>
+const labels = {{ labels|safe }};
+const data = {{ values|safe }};
+
+new Chart(document.getElementById('myChart'), {
+    type: 'pie',
+    data: {
+        labels: labels,
+        datasets: [{
+            data: data
+        }]
+    }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,164 @@
+{% extends 'dvdrental_prediction/base.html' %}
+{% load static %}
+
+{% block title %}Customer Status Predictor{% endblock %}
+
+{% block extra_css %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    .predictor-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        align-items: start;
+        margin-top: 32px;
+    }
+
+    .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-xl);
+        padding: 32px;
+        box-shadow: var(--shadow);
+    }
+
+    .card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 24px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    /* Forms */
+    form p {
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    form label {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+    }
+
+    form input, form select {
+        font-family: inherit;
+        font-size: 0.9rem;
+        padding: 12px 16px;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border);
+        background: var(--surface-2);
+        color: var(--text-primary);
+        width: 100%;
+        transition: var(--transition);
+    }
+
+    form input:focus, form select:focus {
+        outline: none;
+        border-color: var(--accent);
+        background: var(--surface);
+        box-shadow: 0 0 0 3px rgba(201, 98, 47, 0.1);
+    }
+
+    .btn-submit {
+        background: var(--accent);
+        color: #ffffff;
+        border: 1px solid var(--accent);
+        padding: 14px 28px;
+        border-radius: var(--radius-lg);
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .btn-submit:hover {
+        background: transparent;
+        color: var(--accent);
+    }
+
+    /* Status Display */
+    #statusBox {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 20px;
+        text-align: center;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin-bottom: 24px;
+        font-family: 'JetBrains Mono', monospace;
+    }
+
+    .status-active {
+        color: var(--success) !important;
+        background: var(--success-light) !important;
+        border-color: rgba(45, 125, 82, 0.2) !important;
+    }
+
+    .status-inactive {
+        color: #b33a3a !important;
+        background: #fce8e8 !important;
+        border-color: rgba(179, 58, 58, 0.2) !important;
+    }
+
+    /* Chart wrap */
+    .chart-container {
+        position: relative;
+        height: 250px;
+        width: 100%;
+    }
+
+    @media (max-width: 900px) {
+        .predictor-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border);">
+    <div>
+        <div style="display: inline-flex; align-items: center; gap: 6px; background: var(--accent-light); border: 1px solid var(--accent-border); color: var(--accent); font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 11px; border-radius: 100px; margin-bottom: 10px; font-family: 'JetBrains Mono', monospace;">
+            Loyalty Prediction
+        </div>
+        <h2 style="font-size: 1.8rem; font-weight: 700;">Customer Status Predictor</h2>
+    </div>
+</header>
+
+<div class="predictor-layout">
+    <!-- Left panel: Form -->
+    <div class="card">
+        <h3 class="card-title">Customer Parameters</h3>
+        <form id="predictionForm">
+            {{ form.as_p }}
+            <button type="submit" class="btn-submit">Predict Status</button>
+        </form>
+    </div>
+
+    <!-- Right panel: Results -->
+    <div class="card">
+        <h3 class="card-title">Prediction Output</h3>
+        <div id="statusBox">Waiting for input parameters...</div>
+        
+        <div class="chart-container">
+            <canvas id="predictionChart"></canvas>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const predicUrl = "{% url 'predict_customer' %}";
+</script>
+<script src="{% static 'dvdrental_prediction/js/prediction_form.js' %}"></script>
+{% endblock %}

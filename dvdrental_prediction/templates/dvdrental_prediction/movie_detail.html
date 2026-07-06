@@ -1,0 +1,148 @@
+{% extends 'dvdrental_prediction/base.html' %}
+{% load static %}
+
+{% block title %}{{ movie.title }} - Detail{% endblock %}
+
+{% block extra_css %}
+<style>
+    .detail-layout {
+        margin-top: 32px;
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 24px;
+        align-items: start;
+    }
+
+    .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-xl);
+        padding: 32px;
+        box-shadow: var(--shadow);
+    }
+
+    .card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 24px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .info-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .info-item {
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .info-label {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .info-value {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .actor-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 12px;
+    }
+
+    .actor-tag {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        padding: 10px 14px;
+        border-radius: var(--radius-md);
+        font-size: 0.85rem;
+        color: var(--text-primary);
+        font-weight: 500;
+        text-align: center;
+        transition: var(--transition);
+    }
+
+    .actor-tag:hover {
+        border-color: var(--accent);
+        background: var(--accent-light);
+        color: var(--accent);
+    }
+
+    .rating-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        font-family: 'JetBrains Mono', monospace;
+        background: var(--accent-light);
+        color: var(--accent);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border);">
+    <div>
+        <div style="display: inline-flex; align-items: center; gap: 6px; background: var(--accent-light); border: 1px solid var(--accent-border); color: var(--accent); font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 11px; border-radius: 100px; margin-bottom: 10px; font-family: 'JetBrains Mono', monospace;">
+            Film Detail
+        </div>
+        <h2 style="font-size: 1.8rem; font-weight: 700;">{{ movie.title }}</h2>
+    </div>
+    <a href="{% url 'movie_list' %}" style="display: inline-flex; align-items: center; gap: 8px; background: var(--text-primary); color: #ffffff; padding: 10px 20px; border-radius: var(--radius-md); text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: var(--transition);">
+        &larr; Back to Catalog
+    </a>
+</header>
+
+<div class="detail-layout">
+    <!-- Left: General Details -->
+    <div class="card">
+        <h3 class="card-title">Movie Information</h3>
+        <div class="info-list">
+            <div class="info-item">
+                <span class="info-label">Movie Title</span>
+                <span class="info-value" style="color: var(--accent);">{{ movie.title }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Release Year</span>
+                <span class="info-value">{{ movie.release_year }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Rating Classification</span>
+                <span class="info-value"><span class="rating-badge">{{ movie.rating }}</span></span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Language</span>
+                <span class="info-value">{{ movie.language.name }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right: Cast/Actors -->
+    <div class="card">
+        <h3 class="card-title">Cast (Actors)</h3>
+        <div class="actor-grid">
+            {% for actor in actors %}
+                <div class="actor-tag">
+                    👤 {{ actor.first_name }} {{ actor.last_name }}
+                </div>
+            {% empty %}
+                <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 20px;">
+                    No cast data available for this movie.
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+# ==========================================
+# GitIgnore for DVD Rental Customer Segmentation
+# ==========================================
+
+# Django
+*.log
+local_settings.py
+db.sqlite3-shm
+db.sqlite3-wal
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Virtual Environments (This project's venv)
+django_venv/
+Include/
+Lib/
+Scripts/
+pyvenv.cfg
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*~
+
+# OS Files
+.DS_Store
+Thumbs.db

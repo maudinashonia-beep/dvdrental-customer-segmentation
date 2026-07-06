@@ -1,0 +1,257 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DVD Rental Analytics Hub{% endblock %}</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        *, *::before, *::after { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+        }
+
+        :root {
+            --bg: #f5f3ef;
+            --surface: #ffffff;
+            --surface-2: #f9f8f6;
+            --border: #e8e4dd;
+            --border-strong: #d4cfc6;
+            --text-primary: #1a1714;
+            --text-secondary: #6b6560;
+            --text-muted: #a39e97;
+            --accent: #c9622f;
+            --accent-light: #f5e8e0;
+            --accent-border: rgba(201, 98, 47, 0.2);
+            --success: #2d7d52;
+            --success-light: #e0f0e8;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 20px;
+            --shadow: 0 4px 20px rgba(0,0,0,0.04), 0 1px 4px rgba(0,0,0,0.02);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Sora', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* ── Sidebar Style ── */
+        .sidebar {
+            width: 280px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            padding: 32px 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+        }
+
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand-logo-wrapper {
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 8px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .brand-name {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .brand-name span {
+            color: var(--accent);
+        }
+
+        .menu-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: var(--radius-lg);
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+        }
+
+        .menu-link:hover {
+            background: var(--surface-2);
+            color: var(--text-primary);
+            transform: translateX(4px);
+        }
+
+        .menu-link.active {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 600;
+            border-left-color: var(--accent);
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        .menu-icon {
+            width: 18px;
+            height: 18px;
+            stroke-width: 2px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-footer {
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(45, 125, 82, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(45, 125, 82, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(45, 125, 82, 0); }
+        }
+
+        /* ── Main Content Area ── */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 48px;
+            width: calc(100% - 280px);
+            background-image:
+                radial-gradient(ellipse 60% 40% at 80% 10%, rgba(201,98,47,0.04) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 30% at 10% 80%, rgba(201,98,47,0.03) 0%, transparent 60%);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                padding: 24px;
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar">
+        <div>
+            <div class="brand-section">
+                <div class="brand-logo-wrapper">
+                    <i data-lucide="clapperboard" style="width: 20px; height: 20px; stroke-width: 2px;"></i>
+                </div>
+                <h1 class="brand-name">DVD <span>Analytics</span></h1>
+            </div>
+            
+            <ul class="menu-list">
+                <li>
+                    <a href="{% url 'home' %}" class="menu-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                        <i data-lucide="layout-dashboard" class="menu-icon"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'predict_segment' %}" class="menu-link {% if request.resolver_match.url_name == 'predict_segment' %}active{% endif %}">
+                        <i data-lucide="pie-chart" class="menu-icon"></i>
+                        <span>Segmentation</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'customer_prediction_view' %}" class="menu-link {% if request.resolver_match.url_name == 'customer_prediction_view' %}active{% endif %}">
+                        <i data-lucide="users" class="menu-icon"></i>
+                        <span>Status Predictor</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'movie_list' %}" class="menu-link {% if request.resolver_match.url_name == 'movie_list' or request.resolver_match.url_name == 'movie_detail' or request.resolver_match.url_name == 'search_result' %}active{% endif %}">
+                        <i data-lucide="film" class="menu-icon"></i>
+                        <span>Movie Catalog</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/" class="menu-link">
+                        <i data-lucide="settings" class="menu-icon"></i>
+                        <span>Django Admin</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="user-badge">
+                <span class="status-dot"></span>
+                <span>System Online</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ── Main Content Area ── -->
+    <main class="main-content">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    {% block extra_js %}{% endblock %}
+    
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

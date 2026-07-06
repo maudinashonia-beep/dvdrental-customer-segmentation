@@ -1,0 +1,335 @@
+{% extends 'dvdrental_prediction/base.html' %}
+{% load static %}
+
+{% block title %}DVD Rental Analytics Hub - Dashboard{% endblock %}
+
+{% block content %}
+<!-- Content Header -->
+<header class="content-header">
+    <div class="welcome-title">
+        <h2>Welcome</h2>
+        <p>DVD Rental Customer Analytics & Segmentation Platform</p>
+    </div>
+    <div class="system-time">
+        v1.0.0
+    </div>
+</header>
+
+<!-- KPI Grid -->
+<section class="kpi-grid">
+    <div class="kpi-card">
+        <div class="kpi-details">
+            <h4>Total Customers</h4>
+            <p>{{ total_customers }} <span>Customers</span></p>
+        </div>
+        <div class="kpi-icon-wrapper"><i data-lucide="users" style="width: 22px; height: 22px; stroke-width: 2px;"></i></div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-details">
+            <h4>Movie Catalog</h4>
+            <p>{{ total_movies }} <span>Movies</span></p>
+        </div>
+        <div class="kpi-icon-wrapper"><i data-lucide="film" style="width: 22px; height: 22px; stroke-width: 2px;"></i></div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-details">
+            <h4>Active ML Models</h4>
+            <p>2 <span>Models</span></p>
+        </div>
+        <div class="kpi-icon-wrapper"><i data-lucide="cpu" style="width: 22px; height: 22px; stroke-width: 2px;"></i></div>
+    </div>
+</section>
+
+<!-- Dashboard Body Layout -->
+<section class="dashboard-body">
+    <!-- Left Card: Chart.js visualization -->
+    <div class="dashboard-card">
+        <div class="card-header">
+            <h3 class="card-title">Customer Distribution by Spending Segment</h3>
+            <span class="card-badge">K-Means Model</span>
+        </div>
+        <div class="chart-container">
+            <canvas id="segmentDonutChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Right Card: Quick Guide -->
+    <div class="dashboard-card">
+        <div class="card-header">
+            <h3 class="card-title">💡 User Guide</h3>
+        </div>
+        <div class="guide-list">
+            <div class="guide-item">
+                <div class="guide-step">1</div>
+                <div class="guide-text">
+                    <h5>Select Feature in Sidebar</h5>
+                    <p>Use the left navigation menu to switch between analysis modules (Segmentation, Predictor, or Catalog).</p>
+                </div>
+            </div>
+            <div class="guide-item">
+                <div class="guide-step">2</div>
+                <div class="guide-text">
+                    <h5>Input Customer Data</h5>
+                    <p>Enter total payment and transaction frequency to predict the customer spending segment.</p>
+                </div>
+            </div>
+            <div class="guide-item">
+                <div class="guide-step">3</div>
+                <div class="guide-text">
+                    <h5>Retrain ML Model</h5>
+                    <p>Access Django Admin to retrain the machine learning model directly with the latest dataset.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CSS specific to the main dashboard layout -->
+<style>
+    /* Header Info */
+    .content-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+    }
+
+    .welcome-title h2 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 6px;
+        color: var(--text-primary);
+    }
+
+    .welcome-title p {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+    }
+
+    .system-time {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        background: var(--surface);
+        padding: 8px 16px;
+        border-radius: 100px;
+        border: 1px solid var(--border);
+    }
+
+    /* KPI Cards Grid */
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 24px;
+        margin-bottom: 40px;
+    }
+
+    .kpi-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-xl);
+        padding: 24px;
+        box-shadow: var(--shadow);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: var(--transition);
+    }
+
+    .kpi-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+        border-color: rgba(201, 98, 47, 0.2);
+    }
+
+    .kpi-details h4 {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 6px;
+        font-family: 'JetBrains Mono', monospace;
+    }
+
+    .kpi-details p {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+
+    .kpi-icon-wrapper {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-lg);
+        background: var(--accent-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        color: var(--accent);
+    }
+
+    /* Dashboard Body Layout */
+    .dashboard-body {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 24px;
+    }
+
+    /* Card Container Styling */
+    .dashboard-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-xl);
+        padding: 32px;
+        box-shadow: var(--shadow);
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .card-badge {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 500;
+        background: var(--accent-light);
+        color: var(--accent);
+        padding: 4px 8px;
+        border-radius: 4px;
+    }
+
+    /* Chart Canvas Size Wrapper */
+    .chart-container {
+        position: relative;
+        height: 280px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Quick Guide Styling */
+    .guide-list {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        position: relative;
+    }
+
+    /* Vertical line linking steps */
+    .guide-list::before {
+        content: '';
+        position: absolute;
+        top: 14px;
+        bottom: 14px;
+        left: 15px;
+        width: 2px;
+        background: var(--border);
+        z-index: 0;
+    }
+
+    .guide-item {
+        display: flex;
+        gap: 16px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .guide-step {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: var(--accent-light);
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        font-weight: 700;
+        flex-shrink: 0;
+        border: 2px solid var(--surface);
+        box-shadow: 0 0 0 1px var(--border);
+    }
+
+    .guide-text h5 {
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+        color: var(--text-primary);
+    }
+
+    .guide-text p {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        line-height: 1.5;
+    }
+
+    @media (max-width: 1024px) {
+        .dashboard-body {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Chart rendering script -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const ctx = document.getElementById('segmentDonutChart').getContext('2d');
+        const totalSegments = {{ low_count }} + {{ medium_count }} + {{ high_count }};
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: [
+                    'Low Spend (' + ({{ low_count }} / totalSegments * 100).toFixed(1) + '%)', 
+                    'Medium Spend (' + ({{ medium_count }} / totalSegments * 100).toFixed(1) + '%)', 
+                    'VIP Spenders (' + ({{ high_count }} / totalSegments * 100).toFixed(1) + '%)'
+                ],
+                datasets: [{
+                    data: [{{ low_count }}, {{ medium_count }}, {{ high_count }}],
+                    backgroundColor: ['#e09e7a', '#c9622f', '#2d7d52'],
+                    borderWidth: 2,
+                    borderColor: '#ffffff',
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                family: 'Sora',
+                                size: 11,
+                                weight: 500
+                            },
+                            color: '#1a1714',
+                            boxWidth: 12,
+                            padding: 16
+                        }
+                    }
+                },
+                cutout: '72%'
+            }
+        });
+    });
+</script>
+{% endblock %}
