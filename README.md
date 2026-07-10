@@ -2,7 +2,7 @@
 
 A modern, responsive, and data-driven customer analytics portal built on top of the classic PostgreSQL `dvdrental` database. This application integrates Machine Learning algorithms to segment customers and predict customer retention status.
 
-## 🚀 Key Features
+##  Key Features
 
 * **Executive Analytics Dashboard (`/`):** An intuitive dashboard providing high-level operational statistics (total customers, catalog size, active ML models) with interactive data visualization using **Chart.js**.
 * **Customer Spending Segmentation (`/predict-segment/`):** Unsupervised Machine Learning (**K-Means Clustering**) that automatically groups customers into spending tiers (*Low*, *Medium*, *VIP/High*) based on transaction totals and rental frequencies.
@@ -10,7 +10,7 @@ A modern, responsive, and data-driven customer analytics portal built on top of 
 * **Dynamic Movie Catalog (`/movies/`):** A robust catalog interface allowing search and filtering by category, language, and actor, connected directly to a live PostgreSQL relational database.
 * **Modern UI & Navigation:** Implemented a unified, sticky sidebar navigation layout styled with **Lucide Icons** and dynamic active link indicators.
 
-## 🛠️ Technology Stack
+##  Technology Stack
 
 * **Backend Framework:** Django (Python)
 * **Database:** PostgreSQL (Relational Database)
@@ -19,7 +19,7 @@ A modern, responsive, and data-driven customer analytics portal built on top of 
 * **Iconography:** Lucide Icons
 * **Styling:** Premium Vanilla CSS (Responsive & Modern Layout)
 
-## 📋 Installation & Local Setup
+##  Installation & Local Setup
 
 1. **Clone the Repository:**
    ```bash
